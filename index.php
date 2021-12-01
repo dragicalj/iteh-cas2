@@ -1,3 +1,37 @@
+<?php
+
+    require "model/dbbroker.php";
+    require "model/user.php";
+
+    session_start();
+    if(isset($_POST['username']) && isset($_POST['password'])){
+        $uname=$_POST['username'];
+        $upass=$_POST['password'];
+
+        $conn=new mysqli();
+
+        $korisnik=new User(null, $uname, $upass);
+        //$odg=$korisnik->logInUser($uname, $upass, $conn);
+        $odg=User::logInUser($uname, $upass, $conn);
+        if($odg->num_rows==1){
+            echo `
+            <script>
+             console.log("Uspesno ste se prijavili");
+            </script>`
+            ;
+            $_SESSION['usser_id']=$korisnik->id;
+            header('Location:home.php');
+            exit();
+        }
+    else{
+        echo `<script>
+        console.log("Niste se prijavili");
+       </script>`;
+    }
+    }
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
